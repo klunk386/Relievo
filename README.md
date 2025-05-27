@@ -5,7 +5,7 @@
 **Relievo** is a Python tool for generating watertight 3D terrain models 
 from DEM (Digital Elevation Model) tiles and user-defined geographic regions. 
 It supports topographic mesh generation, vertical exaggeration, 
-side walls and base extrusion, and optional tiling for large models.
+side walls and base extrusion, and optional tiling for large-scale output.
 
 STL files can be exported directly for 3D printing or scientific visualization.
 
@@ -24,17 +24,29 @@ STL files can be exported directly for 3D printing or scientific visualization.
 
 ## Installation
 
-To install Relievo and its dependencies:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/yourname/relievo.git
+cd relievo
+```
+
+### 2. Install required dependencies
 
 ```bash
 pip install numpy rasterio shapely pyproj trimesh scipy
 ```
 
-Clone this repository:
+### 3. (Optional) Install in editable mode
 
 ```bash
-git clone https://github.com/yourname/relievo.git
-cd relievo
+pip install -e .
+```
+
+If you use `pyproject.toml` and want to build the package:
+
+```bash
+python -m build
 ```
 
 ---
@@ -101,11 +113,12 @@ relievo(
 )
 ```
 
-This will generate files like:
+This will generate multiple STL files:
 
 ```
 output/relief_tiled_0_0.stl
 output/relief_tiled_0_1.stl
+output/relief_tiled_1_0.stl
 ...
 ```
 
@@ -122,4 +135,3 @@ This project is licensed under the GNU AGPL v3.0.
 Valerio Poggi  
 Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS)  
 vpoggi@ogs.it
-

@@ -1,5 +1,11 @@
 ![Relievo Logo](logo/relievo_logo.png)
 
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+[![Python >=3.8](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
+[![Status: Beta](https://img.shields.io/badge/status-beta-yellow)]()
+[![GitHub Repo](https://img.shields.io/badge/github-relievo-lightgrey?logo=github)](https://github.com/yourname/relievo)
+
+
 # Relievo - 3D Terrain Model Generator
 
 **Relievo** is a Python tool for generating watertight 3D terrain models 

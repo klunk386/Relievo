@@ -1,6 +1,6 @@
 ![Relievo Logo](logo/relievo_logo.png)
 
-# Relievo
+# Relievo - 3D Terrain Model Generator
 
 **Relievo** is a Python tool for generating watertight 3D terrain models 
 from DEM (Digital Elevation Model) tiles and user-defined geographic regions. 

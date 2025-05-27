@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "relievo"
+version = "0.1.0"
+description = "Generate watertight 3D terrain models from DEM and polygons"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "AGPL-3.0"}
+authors = [
+  { name="Valerio Poggi", email="vpoggi@ogs.it" }
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "Programming Language :: Python :: 3",
+  "Topic :: Scientific/Engineering :: GIS",
+  "Topic :: Scientific/Engineering :: Visualization",
+  "Topic :: Multimedia :: Graphics :: 3D Modeling"
+]
+
+dependencies = [
+  "numpy",
+  "rasterio",
+  "pyproj",
+  "shapely",
+  "scipy",
+  "trimesh",
+  "triangle"
+]
+
+[project.urls]
+Homepage = "https://github.com/yourname/relievo"
+Documentation = "https://github.com/yourname/relievo/wiki"
+Issues = "https://github.com/yourname/relievo/issues"

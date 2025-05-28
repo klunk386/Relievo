@@ -48,7 +48,7 @@ You can use **Relievo** either as a **Python module** or from the **command line
 
 ---
 
-### ✅ 1. As a Python Module
+### 1. As a Python Module
 
 Import the function and call it directly:
 
@@ -103,7 +103,7 @@ relievo(
 
 ---
 
-### ✅ 2. As a Command-Line Tool
+### 2. As a Command-Line Tool
 
 After installation, you can run the tool via terminal:
 

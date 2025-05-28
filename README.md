@@ -5,7 +5,6 @@
 [![Status: Beta](https://img.shields.io/badge/status-beta-yellow)]()
 [![GitHub Repo](https://img.shields.io/badge/github-relievo-lightgrey?logo=github)](https://github.com/yourname/relievo)
 
-
 # Relievo - 3D Terrain Model Generator
 
 **Relievo** is a Python tool for generating watertight 3D terrain models 
@@ -17,65 +16,45 @@ STL files can be exported directly for 3D printing or scientific visualization.
 
 ---
 
-## Features
-
-- Merge one or more GeoTIFF DEM tiles automatically
-- Define regions via bounding box, Shapely polygon, or GeoJSON
-- Project to metric CRS (e.g., UTM)
-- Generate topography, base, and vertical walls
-- Control resolution, scaling, and exaggeration
-- Export STL files ready for 3D printing or visualization
-
----
-
 ## Installation
 
-### 1. Clone the repository
+### Using pip (standard)
 
 ```bash
-git clone https://github.com/yourname/relievo.git
-cd relievo
+pip install .
 ```
 
-### 2. Install required dependencies
-
-```bash
-pip install numpy rasterio shapely pyproj trimesh scipy
-```
-
-### 3. (Optional) Install in editable mode
+### Editable install (for development)
 
 ```bash
 pip install -e .
 ```
 
-If you use `pyproject.toml` and want to build the package:
-
-```bash
-python -m build
-```
+> After installation, the command-line tool `relievo` will be available in your system path.
+> If you receive a warning about the script location, consider adding it to your `$PATH`.
 
 ---
 
 ## How to Use
 
-Import the main function:
+You can use **Relievo** either as a **Python module** or from the **command line**.
+
+---
+
+### ✅ 1. As a Python Module
+
+Import the function and call it directly:
 
 ```python
 from relievo import relievo
 ```
 
----
-
-### 1. Bounding Box Mode (new format only)
+#### Example A – Bounding box
 
 ```python
 relievo(
-    tif_paths=[
-        "data/N045E012.tif",
-        "data/N045E013.tif"
-    ],
-    geometry=((12.3, 45.6), (13.9, 46.7)),  # (lon_min, lat_min), (lon_max, lat_max)
+    tif_paths=["data/dem1.tif", "data/dem2.tif"],
+    geometry=((12.3, 45.6), (13.9, 46.7)),
     resolution_m=100,
     base_depth=-1000.0,
     xy_scale=1/700,
@@ -84,16 +63,14 @@ relievo(
 )
 ```
 
----
-
-### 2. GeoJSON Mode (with property filtering)
+#### Example B – GeoJSON region with property filter
 
 ```python
 relievo(
     tif_paths="data/",
     geometry="data/regions.geojson",
     property_key="reg_code",
-    property_value="6",  # Select region by attribute
+    property_value="6",
     resolution_m=100,
     base_depth=-1000.0,
     xy_scale=1/700,
@@ -102,30 +79,68 @@ relievo(
 )
 ```
 
----
-
-### 3. Tiled Output Mode
+#### Example C – Tiled STL output
 
 ```python
 relievo(
     tif_paths="data/",
-    geometry="data/test_polygon.geojson",
+    geometry="data/polygon.geojson",
     resolution_m=100,
     base_depth=-1000.0,
     xy_scale=1/700,
     vertical_exaggeration=2.0,
     tile_size_m=50000,
-    out_prefix="output/relief_tiled"
+    out_prefix="output/relief_tiles"
 )
 ```
 
-This will generate multiple STL files:
+---
+
+### ✅ 2. As a Command-Line Tool
+
+After installation, you can run the tool via terminal:
+
+```bash
+relievo --dem data/dem1.tif data/dem2.tif \
+        --geometry 12.3,45.6,13.9,46.7 \
+        --resolution 100 \
+        --base-depth -1000 \
+        --xy-scale 0.00142857 \
+        --z-exag 2.0 \
+        --tile-size 65000 \
+        --utm-crs EPSG:32633 \
+        --out-prefix output/relief_box \
+        --verbose
+```
+
+#### Example using GeoJSON with attribute filtering:
+
+```bash
+relievo --dem data/*.tif \
+        --geometry data/regions.geojson \
+        --property-key reg_code \
+        --property-value 6 \
+        --out-prefix output/relief_region \
+        --verbose
+```
+
+#### Example using a DEM file list:
+
+Create a text file `dem_list.txt`:
 
 ```
-output/relief_tiled_0_0.stl
-output/relief_tiled_0_1.stl
-output/relief_tiled_1_0.stl
-...
+data/dem1.tif
+data/dem2.tif
+data/dem3.tif
+```
+
+Then run:
+
+```bash
+relievo --dem-list dem_list.txt \
+        --geometry data/polygon.geojson \
+        --out-prefix output/relief_from_list \
+        --verbose
 ```
 
 ---
@@ -138,6 +153,6 @@ This project is distributed under the GNU Affero General Public License v3.0.
 
 ## Author
 
-Valerio Poggi  
+**Valerio Poggi**  
 Istituto Nazionale di Oceanografia e di Geofisica Sperimentale (OGS)  
 vpoggi@ogs.it

@@ -1,0 +1,11 @@
+relievo \
+  --dem-list dem_list.txt \
+  --geometry data/small_polygon.geojson \
+  --resolution 100 \
+  --base-depth -1000 \
+  --xy-scale 0.00142857 \
+  --z-exag 2.0 \
+  --tile-size 5000 \
+  --utm-crs EPSG:32633 \
+  --out-prefix output/relief_polygon_2 \
+  --verbose

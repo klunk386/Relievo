@@ -19,12 +19,12 @@ STL files can be exported directly for 3D printing or scientific visualization.
 
 ## Features
 
-- Load and merge multiple GeoTIFF DEM tiles
+- Merge one or more GeoTIFF DEM tiles automatically
 - Define regions via bounding box, Shapely polygon, or GeoJSON
 - Project to metric CRS (e.g., UTM)
 - Generate topography, base, and vertical walls
 - Control resolution, scaling, and exaggeration
-- Export STL files (single or tiled)
+- Export STL files ready for 3D printing or visualization
 
 ---
 
@@ -57,7 +57,7 @@ python -m build
 
 ---
 
-## Basic Usage
+## How to Use
 
 Import the main function:
 
@@ -67,7 +67,7 @@ from relievo import relievo
 
 ---
 
-### 1. Bounding Box Mode
+### 1. Bounding Box Mode (new format only)
 
 ```python
 relievo(
@@ -75,7 +75,7 @@ relievo(
         "data/N045E012.tif",
         "data/N045E013.tif"
     ],
-    geometry=[12.3, 13.9, 45.6, 46.7],  # lon_min, lon_max, lat_min, lat_max
+    geometry=((12.3, 45.6), (13.9, 46.7)),  # (lon_min, lat_min), (lon_max, lat_max)
     resolution_m=100,
     base_depth=-1000.0,
     xy_scale=1/700,
@@ -132,7 +132,7 @@ output/relief_tiled_1_0.stl
 
 ## License
 
-This project is licensed under the GNU AGPL v3.0.
+This project is distributed under the GNU Affero General Public License v3.0.
 
 ---
 

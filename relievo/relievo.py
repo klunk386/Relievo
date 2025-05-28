@@ -93,7 +93,7 @@ def relievo(
         Path or list of paths to GeoTIFF DEM files or a directory.
     geometry : list, str, or shapely.geometry.Polygon
         Region of interest. Accepts:
-        - A bounding box list [lon_min, lon_max, lat_min, lat_max]
+        - A bounding box list ((lon_min, lat_min), (lon_max, lat_max))
         - A file path to a GeoJSON file
         - A Shapely Polygon or MultiPolygon
     resolution_m : float, default 100
@@ -142,13 +142,14 @@ def relievo(
     if verbose:
         print("[3] Interpreting and projecting geometry...")
 
-    if isinstance(geometry, (list, tuple)) and len(geometry) == 4:
-        lon_min, lon_max, lat_min, lat_max = geometry
-        polygon_proj = create_rectangle_polygon_utm(
-            lon_min, lon_max, lat_min, lat_max,
-            target_crs=crs_utm,
-            resolution=resolution_m
-        )
+    if (isinstance(geometry, (list, tuple)) and len(geometry) == 2):
+        if  all(isinstance(pt, (list, tuple)) for pt in geometry):
+            (lon_min, lat_min), (lon_max, lat_max) = geometry
+            polygon_proj = create_rectangle_polygon_utm(
+                lon_min, lon_max, lat_min, lat_max,
+                target_crs=crs_utm,
+                resolution=resolution_m
+            )
 
     elif isinstance(geometry, (str, Path)):
         polygon = load_polygon_from_geojson(

@@ -18,13 +18,20 @@ STL files can be exported directly for 3D printing or scientific visualization.
 
 ## Installation
 
-### Using pip (standard)
+First, clone the repository into a local folder:
+
+```bash
+git clone https://github.com/yourname/relievo.git
+cd relievo
+```
+
+then proceed installing using pip:
 
 ```bash
 pip install .
 ```
 
-### Editable install (for development)
+or, if you are a developer:
 
 ```bash
 pip install -e .

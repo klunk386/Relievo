@@ -1263,3 +1263,23 @@ def build_closed_mesh(
         wall_mesh
     ])
 
+
+def read_file_list(
+    file_path
+):
+    """
+    Read a text file containing one file path per line and return a list.
+
+    Parameters
+    ----------
+    file_path : str or Path
+        Path to the input text file.
+
+    Returns
+    -------
+    list of str
+        List of file paths.
+    """
+    with open(file_path, "r", encoding="utf-8") as f:
+        lines = [line.strip() for line in f if line.strip()]
+    return lines

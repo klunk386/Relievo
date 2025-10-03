@@ -5,7 +5,7 @@ Generate watertight 3D terrain meshes from DEM and polygon input.
 See the README for usage examples and full documentation.
 """
 
-from .relievo import relievo
+from .relievo import relievo, read_file_list
 
 __version__ = "0.1.0"
 __author__ = "Valerio Poggi"

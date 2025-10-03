@@ -74,6 +74,8 @@ def relievo(
     xy_scale=1 / 750,
     vertical_exaggeration=1.5,
     tile_size_m=None,
+    tile_nx=None,
+    tile_ny=None,
     utm_crs="EPSG:32633",
     out_prefix="model_tile",
     property_key=None,
@@ -106,6 +108,13 @@ def relievo(
         Additional vertical exaggeration multiplier (applied on Z).
     tile_size_m : float or None, default None
         Optional tile size in meters. If set, export multiple STL tiles.
+    tile_size_m : float or None, default None
+        Optional square tile size in meters. Mutually exclusive with
+        (tile_nx, tile_ny). If set, multiple STL tiles are exported.
+    tile_nx, tile_ny : int or None, default None
+        Number of tiles along X (longitude) and Y (latitude).
+        Mutually exclusive with tile_size_m. If both are provided,
+        the DEM is subdivided into a grid of tile_nx × tile_ny.
     utm_crs : str, default "EPSG:32633"
         EPSG code of the projected CRS used.
     out_prefix : str, default "model_tile"
@@ -176,6 +185,30 @@ def relievo(
 
     else:
         raise TypeError("Unsupported geometry format.")
+
+    if tile_size_m is not None:
+        if (tile_nx is not None or tile_ny is not None):
+            raise ValueError(
+                "Use either tile_size_m OR (tile_nx and tile_ny), not both."
+            )
+    if (tile_nx is None) ^ (tile_ny is None):
+        raise ValueError("Provide both tile_nx and tile_ny, or neither.")
+
+    if tile_nx is not None and tile_ny is not None:
+        if verbose:
+            print("[4] Subdividing model into a fixed grid of tiles...")
+        return build_model_tiles(
+            dem_array=dem_proj,
+            transform=transform_proj,
+            crs=crs_utm,
+            polygon=polygon_proj,
+            tile_size=("auto_by_count", (tile_nx, tile_ny)),
+            base_depth=base_depth,
+            xy_scale=xy_scale,
+            z_exag=vertical_exaggeration,
+            out_prefix=out_prefix,
+            verbose=verbose
+        )
 
     if tile_size_m is not None:
         if verbose:
@@ -361,8 +394,10 @@ def build_model_tiles(
         CRS of the DEM and polygon (projected).
     polygon : shapely.Polygon or MultiPolygon
         Projected polygon defining the full model extent.
-    tile_size : float
-        Length of each square tile (in meters).
+    tile_size : float or tuple
+        - If float: side length (meters) of square tiles.
+        - If ("auto_by_count", (nx, ny)): subdivides into a grid
+          of nx × ny tiles.
     base_depth : float
         Elevation of the flat base (in meters).
     xy_scale : float
@@ -379,18 +414,37 @@ def build_model_tiles(
     None
     """
     minx, miny, maxx, maxy = polygon.bounds
-    nx = int(np.ceil((maxx - minx) / tile_size))
-    ny = int(np.ceil((maxy - miny) / tile_size))
+
+    if (isinstance(tile_size, tuple)
+            and tile_size
+            and tile_size[0] == "auto_by_count"):
+        nx, ny = tile_size[1]
+        if not (
+            isinstance(nx, int) and nx > 0
+            and isinstance(ny, int) and ny > 0
+        ):
+            raise ValueError(
+                "tile_nx and tile_ny must be positive integers."
+            )
+        sx = (maxx - minx) / nx
+        sy = (maxy - miny) / ny
+    else:
+        if not (isinstance(tile_size, (int, float)) and tile_size > 0):
+            raise ValueError("tile_size must be a positive number.")
+        sx = float(tile_size)
+        sy = float(tile_size)
+        nx = int(np.ceil((maxx - minx) / sx))
+        ny = int(np.ceil((maxy - miny) / sy))
 
     if verbose:
         print(f"  [6.1] Tiling {nx} x {ny} regions...")
 
     for i in range(nx):
         for j in range(ny):
-            x0 = minx + i * tile_size
-            x1 = x0 + tile_size
-            y0 = miny + j * tile_size
-            y1 = y0 + tile_size
+            x0 = minx + i * sx
+            x1 = min(x0 + sx, maxx)
+            y0 = miny + j * sy
+            y1 = min(y0 + sy, maxy)
 
             tile_box = Polygon([
                 (x0, y0), (x1, y0),
